@@ -1,0 +1,333 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aivora AI — Clinical Assistant & Research Graph</title>
+  <meta name="description" content="Aivora AI — منصة طبية تعليمية مدفوعة بالذكاء الاصطناعي: مساعد سريري، بحث PubMed، خرائط معرفة جينية، ورسائل إنسانية." />
+  <meta name="theme-color" content="#00ff88" />
+  <meta property="og:title" content="Aivora AI — Clinical Assistant & Research Graph" />
+  <meta property="og:description" content="مساعد سريري تعليمي + بحث PubMed + نموذج خريطة معرفة طبية وجينية." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="aivora-logo.png" />
+  <link rel="icon" href="aivora-logo.png" />
+  <!-- Fonts (system stack to keep it light + crisp) -->
+  <style>
+    :root{
+      --bg:#0b0f0e;           /* near-black */
+      --bg2:#0f1513;          /* panel */
+      --txt:#e6f6ef;          /* high-contrast text */
+      --muted:#a3bfb4;        /* secondary */
+      --neon:#00ff88;         /* Aivora neon green */
+      --neon-dim:#00d174;
+      --accent:#1bffb1;
+      --card:#0b1613;
+      --error:#ff4d6d;
+      --ok:#2ee6a6;
+      --border: rgba(0,255,136,0.2);
+      --glow: 0 0 32px rgba(0,255,136,0.18), 0 0 8px rgba(0,255,136,0.25);
+      --radius:18px;
+      --radius-sm:12px;
+      --shadow: 0 6px 28px rgba(0,0,0,0.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Kufi Arabic", Tahoma, Arial;
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(0,255,136,0.06), transparent),
+                  radial-gradient(1000px 800px at -10% 10%, rgba(0,255,136,0.05), transparent),
+                  var(--bg);
+      color:var(--txt);
+      letter-spacing:.1px;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}/* Header / Nav */
+header{
+  position:sticky; top:0; z-index:40;
+  backdrop-filter:saturate(1.2) blur(10px);
+  background:linear-gradient(180deg, rgba(10,14,13,0.85), rgba(10,14,13,0.65));
+  border-bottom:1px solid var(--border);
+}
+.nav{max-width:1200px; margin:auto; display:flex; align-items:center; gap:18px; padding:12px 18px}
+.brand{display:flex; gap:12px; align-items:center}
+.brand img{width:40px; height:40px; border-radius:50%; box-shadow:var(--glow)}
+.brand .title{font-weight:800; letter-spacing:1px}
+.nav .spacer{flex:1}
+.nav a.btn{padding:10px 14px; border:1px solid var(--border); border-radius:12px; color:var(--txt)}
+.primary{background:linear-gradient(90deg, var(--neon), var(--accent)); color:#03150e; font-weight:700; border:none; box-shadow:var(--glow)}
+
+/* Hero */
+.hero{max-width:1200px; margin:32px auto; display:grid; grid-template-columns:1.2fr .8fr; gap:24px; padding:0 18px}
+@media (max-width: 960px){.hero{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg, rgba(0,255,136,0.04), rgba(0,0,0,0)) ; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+.hero .left{padding:28px}
+.hero h1{font-size:clamp(26px, 3.2vw, 42px); margin:0 0 12px}
+.hero p{color:var(--muted); line-height:1.8; margin:0 0 22px}
+.badges{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+.badge{border:1px solid var(--border); color:var(--neon); border-radius:999px; padding:6px 10px; font-size:13px; background:rgba(0,255,136,0.06)}
+.hero .right{position:relative; padding:0; overflow:hidden}
+.orb{position:absolute; inset:0; background:
+    radial-gradient(240px 240px at 65% 35%, rgba(0,255,136,0.25), transparent),
+    radial-gradient(180px 180px at 35% 65%, rgba(0,255,136,0.18), transparent);
+  filter:blur(30px); opacity:.8;}
+.logo-card{position:relative; display:flex; align-items:center; justify-content:center; height:100%; min-height:220px}
+.logo-card img{width:210px; height:210px; object-fit:contain; filter:drop-shadow(0 0 24px rgba(0,255,136,.25))}
+
+/* Sections */
+section{max-width:1200px; margin:40px auto; padding:0 18px}
+h2{font-size:clamp(20px, 2.4vw, 30px); margin:0 0 16px}
+.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+@media (max-width: 1024px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width: 700px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+.card h3{margin:0 0 8px; font-size:18px}
+.card p{color:var(--muted); margin:0 0 12px}
+.card .actions{display:flex; gap:8px; flex-wrap:wrap}
+.btn{display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#0f1412; color:var(--txt); cursor:pointer}
+.btn:hover{border-color:var(--neon)}
+
+/* Chat */
+.chat{display:grid; grid-template-columns:1.1fr .9fr; gap:18px}
+@media (max-width: 960px){.chat{grid-template-columns:1fr}}
+.chatbox{min-height:380px; display:flex; flex-direction:column}
+.messages{flex:1; overflow:auto; padding:14px; display:flex; flex-direction:column; gap:10px}
+.msg{padding:12px 14px; border-radius:14px; width:fit-content; max-width:100%; line-height:1.7}
+.you{background:#0f1a17; border:1px solid var(--border)}
+.bot{background:#0e201a; border:1px solid rgba(0,255,136,0.25)}
+.controls{display:flex; gap:10px; padding:12px; border-top:1px solid var(--border)}
+.controls input{flex:1; background:#0e1412; color:var(--txt); border:1px solid var(--border); padding:12px 12px; border-radius:12px; outline:none}
+select{background:#0e1412; color:var(--txt); border:1px solid var(--border); padding:10px 8px; border-radius:10px}
+
+.note{color:var(--muted); font-size:13px; margin-top:8px}
+
+/* Footer */
+footer{margin-top:60px; padding:28px 18px; background:#0a100e; border-top:1px solid var(--border)}
+.foot{max-width:1200px; margin:auto; display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between}
+.small{color:var(--muted); font-size:13px}
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="brand">
+        <!-- Place aivora-logo.png in repo root -->
+        <img src="aivora-logo.png" alt="Aivora AI Logo" />
+        <div class="title">AIVORA AI</div>
+      </div>
+      <div class="spacer"></div>
+      <a class="btn" href="#assistant">المساعد الطبي</a>
+      <a class="btn" href="#research">الأبحاث</a>
+      <a class="btn" href="#donate">تبرعات</a>
+      <a class="btn primary" href="#contact">تواصل</a>
+    </nav>
+  </header>  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="panel left">
+        <h1>منصة Aivora AI السريرية — تعليمية، مدفوعة بالذكاء الاصطناعي</h1>
+        <p>
+          نُقدّم مساعدًا سريريًا تعليميًا مدعومًا بنماذج LLM، بحثًا آليًا في PubMed، ونموذجًا أوليًا لخرائط معرفة طبية/جينية. المنصة لا تقدّم تشخيصًا أو علاجًا شخصيًا. للاستخدام التعليمي والبحثي فقط.
+        </p>
+        <div class="badges">
+          <div class="badge">AI Clinical Assistant</div>
+          <div class="badge">PubMed Auto-Search</div>
+          <div class="badge">Knowledge Graph (Prototype)</div>
+          <div class="badge">Arabic / English</div>
+        </div>
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn primary" href="#assistant">جرّب المساعد الآن</a>
+          <a class="btn" href="#about">عن المنصة</a>
+        </div>
+      </div>
+      <div class="panel right">
+        <div class="orb" aria-hidden="true"></div>
+        <div class="logo-card">
+          <img src="aivora-logo.png" alt="Aivora AI" />
+        </div>
+      </div>
+    </section><!-- RESEARCH CARDS -->
+<section id="research">
+  <h2>بوابات بحثية سريعة</h2>
+  <div class="grid">
+    <article class="card">
+      <h3>Oncology • Rare & Ultra-rare</h3>
+      <p>ملخصات تعليمية وروابط PubMed للأورام النادرة مع تركيز على المؤشرات الجزيئية.</p>
+      <div class="actions">
+        <a class="btn" href="https://pubmed.ncbi.nlm.nih.gov/?term=rare%20cancer" target="_blank">PubMed</a>
+        <button class="btn" onclick="quickSearch('rare cancer molecular markers')">بحث ذكي</button>
+      </div>
+    </article>
+    <article class="card">
+      <h3>Genetics • Pathways</h3>
+      <p>ارتباطات الجينات، المسارات، والأدوية المستهدِفة (تعليمي فقط).</p>
+      <div class="actions">
+        <a class="btn" href="https://pubmed.ncbi.nlm.nih.gov/?term=gene%20pathways" target="_blank">PubMed</a>
+        <button class="btn" onclick="quickSearch('gene pathways oncology')">بحث ذكي</button>
+      </div>
+    </article>
+    <article class="card">
+      <h3>Ethics • Bias & Safety</h3>
+      <p>أفضل الممارسات الأخلاقية عند استخدام نماذج اللغة في التعليم الطبي.</p>
+      <div class="actions">
+        <a class="btn" href="https://oecd.ai" target="_blank">OECD AI</a>
+        <a class="btn" href="https://www.nice.org.uk/" target="_blank">NICE</a>
+      </div>
+    </article>
+  </div>
+  <p class="note">ملاحظة: المحتوى تعليمي فقط. نعرض روابط خارجية (PubMed/WHO/…)، ولا نخزّن ملفات مرضى على الموقع.</p>
+</section>
+
+<!-- ASSISTANT -->
+<section id="assistant">
+  <h2>المساعد الطبي التعليمي</h2>
+  <div class="chat">
+    <div class="card chatbox" id="chatCard">
+      <div class="messages" id="messages" aria-live="polite"></div>
+      <div class="controls">
+        <input id="userInput" placeholder="اسأل عن FGFR1 / NRG1 / MRD … (تعليمي فقط)" />
+        <select id="model">
+          <option value="gpt-4o-mini">gpt-4o-mini</option>
+          <option value="gpt-4.1">gpt-4.1</option>
+          <option value="gpt-5">gpt-5</option>
+        </select>
+        <button class="btn primary" id="sendBtn">إرسال</button>
+      </div>
+      <div class="note">تنويه: إجابات الذكاء الاصطناعي لأغراض تعليمية عامة — ليست نصيحة طبية شخصية. راجع طبيبك المختص عند الحاجة.</div>
+    </div>
+    <div class="card">
+      <h3>روابط بحثية سريعة</h3>
+      <div class="actions" style="margin-bottom:10px">
+        <button class="btn" onclick="quickSearch('salivary gland cancer FGFR1')">SGC • FGFR1</button>
+        <button class="btn" onclick="quickSearch('NRG1 fusion oncology')">NRG1 fusion</button>
+        <button class="btn" onclick="quickSearch('minimal residual disease MRD')">MRD</button>
+      </div>
+      <div>
+        <label class="small">نتائج PubMed (تجريبية):</label>
+        <div id="pubmedResults" class="small"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / FUTURE -->
+<section id="about">
+  <h2>عن Aivora AI • المستقبل</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>نموذج المنصة المستقبلي</h3>
+      <p>بناء Knowledge Graph طبي/جيني تفاعلي يربط الجينات بالأمراض والمسارات والأدوية، مع واجهة استكشاف بصرية للباحثين.</p>
+    </div>
+    <div class="card">
+      <h3>الشركاء والبيئة</h3>
+      <p>نسعى لتعاونات أكاديمية وصناعية لجمع بيانات مجهّلة أخلاقيًا وتطوير أدوات تعليمية مبنية على الذكاء الاصطناعي.</p>
+    </div>
+    <div class="card">
+      <h3>المبادئ</h3>
+      <p>الشفافية، احترام الخصوصية، الالتزام بالمصادر الموثوقة (PubMed/WHO/NCCN/NICE)، وعدم تقديم استشارات طبية شخصية.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DONATIONS / CONTACT -->
+<section id="donate">
+  <h2>التبرعات (إنساني / بحث)</h2>
+  <div class="card">
+    <p>نستقبل رسائل دعم معنوي/بحثي للمساعدة في تلخيص الأبحاث ودعم المرضى في المناطق النائية (بدون تحويلات مالية على الموقع). إذا رغبت في الدعم، راسلنا على البريد الرسمي:</p>
+    <p><a href="mailto:aivoraailtduk@outlook.com">aivoraailtduk@outlook.com</a></p>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>تواصل</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>البريد</h3>
+      <p><a href="mailto:aivoraailtduk@outlook.com">aivoraailtduk@outlook.com</a></p>
+    </div>
+    <div class="card">
+      <h3>LinkedIn</h3>
+      <p><a href="https://www.linkedin.com/" target="_blank" rel="noopener">تواصل عبر لينكدإن</a></p>
+    </div>
+    <div class="card">
+      <h3>ملاحظات قانونية</h3>
+      <p class="small">المنصة تعليمية فقط. لا تجمع سجلات مرضى ولا تقدّم تشخيصًا فرديًا. استخدامك للموقع يعني قبولك بذلك.</p>
+    </div>
+  </div>
+</section>
+
+  </main>  <footer>
+    <div class="foot">
+      <div class="small">© Aivora AI LTD UK — All educational content only.</div>
+      <div class="small">AI • DATA • VISION</div>
+    </div>
+  </footer>  <script>
+    // =============================
+    // Aivora AI — Frontend JS (Vanilla)
+    // =============================
+    // 1) BACKEND ENDPOINT (to be hosted on Vercel/Netlify/Server). Leave empty to run in demo mode.
+    const API_URL = ""; // e.g. "https://aivora-api.vercel.app/api/chat"
+
+    // 2) Simple chat state
+    const msgsEl = document.getElementById('messages');
+    const inputEl = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function pushMsg(role, text){
+      const div = document.createElement('div');
+      div.className = 'msg ' + (role === 'user' ? 'you' : 'bot');
+      div.textContent = text;
+      msgsEl.appendChild(div);
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+    }
+
+    async function send(){
+      const text = (inputEl.value || '').trim();
+      if(!text) return;
+      inputEl.value = '';
+      pushMsg('user', text);
+
+      // Demo mode fallback
+      const model = document.getElementById('model').value;
+
+      if(!API_URL){
+        const hint = `Aivora: (Demo) API غير متصل.\n\nاقتراحات بحثية:\n• ابحث في PubMed عن: "${text}"\n• جرّب كلمات مفتاحية: biomarkers, pathways, clinical trials\n\nتنويه: المحتوى تعليمي فقط.`;
+        pushMsg('assistant', hint);
+        return;
+      }
+
+      try{
+        pushMsg('assistant', '… جاري التحليل (قد يستغرق ثوانٍ)');
+        const resp = await fetch(API_URL, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            model,
+            message:text
+          })
+        });
+        const data = await resp.json();
+        const content = data?.content || data?.answer || JSON.stringify(data);
+        // Replace last placeholder message
+        msgsEl.lastChild.textContent = content + "\n\n— تعليمياً فقط وليس نصيحة طبية شخصية.";
+      }catch(err){
+        msgsEl.lastChild.textContent = 'خطأ في الاتصال: ' + (err?.message || err);
+      }
+    }
+
+    sendBtn.addEventListener('click', send);
+    inputEl.addEventListener('keydown', e=>{ if(e.key==='Enter'){ send(); }});
+
+    // 3) PubMed experimental search
+    async function pubmed(term){
+      // NOTE: PubMed official APIs require E-utilities (NCBI). For client-only demo, we construct a search link.
+      const url = `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(term)}`;
+      const container = document.getElementById('pubmedResults');
+      container.innerHTML = `<a href="${url}" target="_blank">فتح نتائج PubMed لعبارة: ${term}</a>`;
+    }
+
+    window.quickSearch = function(term){
+      inputEl.value = term;
+      pubmed(term);
+    }
+  </script></body>
+</html>
